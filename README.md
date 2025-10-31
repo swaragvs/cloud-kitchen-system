@@ -1,6 +1,6 @@
-# Food Delivery System
+# Cloud-Kitchen System
 
-A Java Swing-based food delivery management system that handles user registration, restaurant management, menu items, and order processing.
+A Java Swing-based Cloud-Kitchen management system that handles user registration, restaurant management, menu items, and order processing.
 
 ## Features
 
