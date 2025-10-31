@@ -1,0 +1,794 @@
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\FoodDeliveryGUI.java
+package gui;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class FoodDeliveryGUI extends Application {
+
+    private Button registerUserButton;
+    private Button loginUserButton;
+    private Button addRestaurantButton;
+    private Button addMenuItemButton;
+    private Button placeOrderButton;
+    private Button exitButton;
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Create UI components
+        registerUserButton = new Button("Register User");
+        loginUserButton = new Button("Login User");
+        addRestaurantButton = new Button("Add Restaurant");
+        addMenuItemButton = new Button("Add Menu Item");
+        placeOrderButton = new Button("Place Order");
+        exitButton = new Button("Exit");
+
+        // Create layout
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.getChildren().addAll(
+                registerUserButton,
+                loginUserButton,
+                addRestaurantButton,
+                addMenuItemButton,
+                placeOrderButton,
+                exitButton
+        );
+
+        // Create scene and set layout
+        Scene scene = new Scene(vbox, 300, 250);
+
+        // Set stage title and scene, then show stage
+        primaryStage.setTitle("Food Delivery System");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\gui\FoodDeliveryFXGUI.java
+package gui;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class FoodDeliveryFXGUI extends Application {
+
+    private Button registerUserButton;
+    private Button loginUserButton;
+    private Button addRestaurantButton;
+    private Button addMenuItemButton;
+    private Button placeOrderButton;
+    private Button exitButton;
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Create UI components
+        registerUserButton = new Button("Register User");
+        loginUserButton = new Button("Login User");
+        addRestaurantButton = new Button("Add Restaurant");
+        addMenuItemButton = new Button("Add Menu Item");
+        placeOrderButton = new Button("Place Order");
+        exitButton = new Button("Exit");
+
+        // Create layout
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.getChildren().addAll(
+                registerUserButton,
+                loginUserButton,
+                addRestaurantButton,
+                addMenuItemButton,
+                placeOrderButton,
+                exitButton
+        );
+
+        // Create scene and set layout
+        Scene scene = new Scene(vbox, 300, 250);
+
+        // Set stage title and scene, then show stage
+        primaryStage.setTitle("Food Delivery System");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\gui\FoodDeliverySwingGUI.java
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class FoodDeliverySwingGUI extends JFrame {
+
+    public FoodDeliverySwingGUI() {
+        setTitle("Food Delivery System");
+        setSize(300, 250);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6, 1, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JButton registerUserButton = new JButton("Register User");
+        JButton loginUserButton = new JButton("Login User");
+        JButton addRestaurantButton = new JButton("Add Restaurant");
+        JButton addMenuItemButton = new JButton("Add Menu Item");
+        JButton placeOrderButton = new JButton("Place Order");
+        JButton exitButton = new JButton("Exit");
+
+        registerUserButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Implement action for registering user
+            }
+        });
+
+        // Other action listeners...
+
+        panel.add(registerUserButton);
+        panel.add(loginUserButton);
+        panel.add(addRestaurantButton);
+        panel.add(addMenuItemButton);
+        panel.add(placeOrderButton);
+        panel.add(exitButton);
+
+        add(panel);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new FoodDeliverySwingGUI();
+            }
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\gui\LoginWindow.java
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
+public class LoginWindow extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Create UI components
+        Label usernameLabel = new Label("Username:");
+        TextField usernameField = new TextField();
+        Label passwordLabel = new Label("Password:");
+        TextField passwordField = new TextField();
+        Button loginButton = new Button("Login");
+
+        // Create layout
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+
+        // Add components to layout
+        gridPane.add(usernameLabel, 0, 0);
+        gridPane.add(usernameField, 1, 0);
+        gridPane.add(passwordLabel, 0, 1);
+        gridPane.add(passwordField, 1, 1);
+        gridPane.add(loginButton, 1, 2);
+
+        // Create scene and set layout
+        Scene scene = new Scene(gridPane, 300, 200);
+
+        // Set stage title and scene, then show stage
+        primaryStage.setTitle("Login");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\main\Main.java
+package main;
+
+import model.User;
+import model.Restaurant;
+import model.MenuItem;
+import service.UserService;
+import service.RestaurantService;
+import service.OrderService;
+import service.DeliveryService;
+
+import java.util.Scanner;
+
+public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final UserService userService = new UserService();
+    private static final RestaurantService restaurantService = new RestaurantService();
+    private static final OrderService orderService = new OrderService();
+    private static final DeliveryService deliveryService = new DeliveryService();
+
+    public static void main(String[] args) {
+        // Basic menu to interact with the system
+        while (true) {
+            System.out.println("1. Register User");
+            System.out.println("2. Login User");
+            System.out.println("3. Add Restaurant");
+            System.out.println("4. Add Menu Item");
+            System.out.println("5. Place Order");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    registerUser();
+                    break;
+                case 2:
+                    loginUser();
+                    break;
+                case 3:
+                    addRestaurant();
+                    break;
+                case 4:
+                    addMenuItem();
+                    break;
+                case 5:
+                    placeOrder();
+                    break;
+                case 6:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
+        }
+    }
+
+    private static void registerUser() {
+        System.out.print("Enter user ID: ");
+        String userId = scanner.nextLine();
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+        System.out.print("Enter address: ");
+        String address = scanner.nextLine();
+
+        userService.registerUser(userId, name, email, password, address);
+        System.out.println("User registered successfully.");
+    }
+
+    private static void loginUser() {
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        if (userService.loginUser(email, password) != null) {
+            System.out.println("Login successful.");
+        } else {
+            System.out.println("Invalid email or password.");
+        }
+    }
+
+    private static void addRestaurant() {
+        System.out.print("Enter restaurant ID: ");
+        String restaurantId = scanner.nextLine();
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter address: ");
+        String address = scanner.nextLine();
+
+        restaurantService.addRestaurant(restaurantId, name, address);
+        System.out.println("Restaurant added successfully.");
+    }
+
+    private static void addMenuItem() {
+        System.out.print("Enter restaurant ID: ");
+        String restaurantId = scanner.nextLine();
+        System.out.print("Enter item ID: ");
+        String itemId = scanner.nextLine();
+        System.out.print("Enter item name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter description: ");
+        String description = scanner.nextLine();
+        System.out.print("Enter price: ");
+        double price = scanner.nextDouble();
+        scanner.nextLine(); // Consume newline
+
+        restaurantService.addMenuItem(restaurantId, itemId, name, description, price);
+        System.out.println("Menu item added successfully.");
+    }
+
+    private static void placeOrder() {
+        System.out.print("Enter order ID: ");
+        String orderId = scanner.nextLine();
+        System.out.print("Enter user ID: ");
+        String userId = scanner.nextLine();
+        System.out.print("Enter restaurant ID: ");
+        String restaurantId = scanner.nextLine();
+
+        orderService.placeOrder(orderId, userId, restaurantId);
+        System.out.println("Order placed successfully.");
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\model\DeliveryPerson.java
+package model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DeliveryPerson implements Serializable {
+    private String deliveryPersonId;
+    private String name;
+    private String currentLocation;
+    private List<Order> assignedOrders;
+
+    public DeliveryPerson(String deliveryPersonId, String name, String currentLocation) {
+        this.deliveryPersonId = deliveryPersonId;
+        this.name = name;
+        this.currentLocation = currentLocation;
+        this.assignedOrders = new ArrayList<>();
+    }
+
+    public String getDeliveryPersonId() {
+        return deliveryPersonId;
+    }
+
+    public void setDeliveryPersonId(String deliveryPersonId) {
+        this.deliveryPersonId = deliveryPersonId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;
+    }
+
+    public List<Order> getAssignedOrders() {
+        return assignedOrders;
+    }
+
+    public void setAssignedOrders(List<Order> assignedOrders) {
+        this.assignedOrders = assignedOrders;
+    }
+
+    // Additional methods for DeliveryPerson class can be added here
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\model\MenuItem.java
+package model;
+
+import java.io.Serializable;
+
+public class MenuItem implements Serializable {
+    private String itemId;
+    private String name;
+    private String description;
+    private double price;
+
+    public MenuItem(String itemId, String name, String description, double price) {
+        this.itemId = itemId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
+    // Getters and setters
+    public String getItemId() { return itemId; }
+    public void setItemId(String itemId) { this.itemId = itemId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\model\Order.java
+package model;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class Order implements Serializable {
+    private String orderId;
+    private String userId;
+    private String restaurantId;
+    private HashMap<MenuItem, Integer> items;
+    private String status;
+    private String deliveryPersonId;
+
+    public Order(String orderId, String userId, String restaurantId) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.restaurantId = restaurantId;
+        this.items = new HashMap<>();
+        this.status = "Pending";
+    }
+
+    // Getters and setters
+    public String getOrderId() { return orderId; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getRestaurantId() { return restaurantId; }
+    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+
+    public HashMap<MenuItem, Integer> getItems() { return items; }
+    public void setItems(HashMap<MenuItem, Integer> items) { this.items = items; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getDeliveryPersonId() { return deliveryPersonId; }
+    public void setDeliveryPersonId(String deliveryPersonId) { this.deliveryPersonId = deliveryPersonId; }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\model\Restaurant.java
+package model;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class Restaurant implements Serializable {
+    private String restaurantId;
+    private String name;
+    private String address;
+    private HashMap<String, MenuItem> menu;
+
+    public Restaurant(String restaurantId, String name, String address) {
+        this.restaurantId = restaurantId;
+        this.name = name;
+        this.address = address;
+        this.menu = new HashMap<>();
+    }
+
+    // Getters and setters
+    public String getRestaurantId() { return restaurantId; }
+    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public HashMap<String, MenuItem> getMenu() { return menu; }
+    public void setMenu(HashMap<String, MenuItem> menu) { this.menu = menu; }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\model\User.java
+package model;
+
+import java.io.Serializable;
+import java.util.LinkedList;
+
+public class User implements Serializable {
+    private String userId;
+    private String name;
+    private String email;
+    private String password;
+    private String address;
+    private LinkedList<Order> orderHistory;
+
+    public User(String userId, String name, String email, String password, String address) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.orderHistory = new LinkedList<>();
+    }
+
+    // Getters and setters
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public LinkedList<Order> getOrderHistory() { return orderHistory; }
+    public void setOrderHistory(LinkedList<Order> orderHistory) { this.orderHistory = orderHistory; }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\service\DeliveryService.java
+package service;
+
+import model.DeliveryPerson;
+import model.Order;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class DeliveryService {
+    private HashMap<String, DeliveryPerson> deliveryPeople;
+
+    public DeliveryService() {
+        deliveryPeople = FileUtil.loadDeliveryPeople();
+    }
+
+    public void assignOrder(String deliveryPersonId, Order order) {
+        DeliveryPerson deliveryPerson = deliveryPeople.get(deliveryPersonId);
+        if (deliveryPerson != null) {
+            deliveryPerson.getAssignedOrders().add(order);
+            FileUtil.saveDeliveryPeople(deliveryPeople);
+        }
+    }
+
+    public void updateDeliveryPersonLocation(String deliveryPersonId, String newLocation) {
+        DeliveryPerson deliveryPerson = deliveryPeople.get(deliveryPersonId);
+        if (deliveryPerson != null) {
+            deliveryPerson.setCurrentLocation(newLocation);
+            FileUtil.saveDeliveryPeople(deliveryPeople);
+        }
+    }
+
+    // Other methods to manage delivery personnel
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\service\OrderService.java
+package service;
+
+import model.Order;
+import util.FileUtil;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+
+public class OrderService {
+    private HashMap<String, Order> orders;
+
+    public OrderService() {
+        orders = FileUtil.loadOrders();
+    }
+
+    public void placeOrder(String orderId, String userId, String restaurantId) {
+        Order order = new Order(orderId, userId, restaurantId);
+        orders.put(orderId, order);
+        FileUtil.saveOrders(orders);
+    }
+
+    public void updateOrderStatus(String orderId, String newStatus) {
+        Order order = orders.get(orderId);
+        if (order != null) {
+            order.setStatus(newStatus);
+            FileUtil.saveOrders(orders);
+        }
+    }
+
+    // Other methods to manage orders
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\service\RestaurantService.java
+package service;
+
+import model.MenuItem;
+import model.Restaurant;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class RestaurantService {
+    private HashMap<String, Restaurant> restaurants;
+
+    public RestaurantService() {
+        restaurants = FileUtil.loadRestaurants();
+    }
+
+    public void addRestaurant(String restaurantId, String name, String address) {
+        Restaurant restaurant = new Restaurant(restaurantId, name, address);
+        restaurants.put(restaurantId, restaurant);
+        FileUtil.saveRestaurants(restaurants);
+    }
+
+    public void addMenuItem(String restaurantId, String itemId, String name, String description, double price) {
+        Restaurant restaurant = restaurants.get(restaurantId);
+        if (restaurant != null) {
+            MenuItem menuItem = new MenuItem(itemId, name, description, price);
+            restaurant.getMenu().put(itemId, menuItem);
+            FileUtil.saveRestaurants(restaurants);
+        }
+    }
+
+    // Other methods to manage restaurant data
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\service\UserService.java
+package service;
+
+import model.User;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class UserService {
+    private HashMap<String, User> users;
+
+    public UserService() {
+        users = FileUtil.loadUsers();
+    }
+
+    public void registerUser(String userId, String name, String email, String password, String address) {
+        User user = new User(userId, name, email, password, address);
+        users.put(userId, user);
+        FileUtil.saveUsers(users);
+    }
+
+    public User loginUser(String email, String password) {
+        for (User user : users.values()) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    // Other methods to manage user data
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\src\food-delivery-system\util\FileUtil.java
+package util;
+
+import java.io.*;
+import java.util.HashMap;
+import model.User;
+import model.Restaurant;
+import model.Order;
+import model.DeliveryPerson;
+
+public class FileUtil {
+    public static HashMap<String, User> loadUsers() {
+        HashMap<String, User> users = new HashMap<>();
+        try (FileInputStream fis = new FileInputStream("data/users.ser");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            users = castObjectToHashMap(ois.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public static void saveUsers(HashMap<String, User> users) {
+        try (FileOutputStream fos = new FileOutputStream("data/users.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static HashMap<String, Restaurant> loadRestaurants() {
+        HashMap<String, Restaurant> restaurants = new HashMap<>();
+        try (FileInputStream fis = new FileInputStream("data/restaurants.ser");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            restaurants = castObjectToHashMap(ois.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return restaurants;
+    }
+
+    public static void saveRestaurants(HashMap<String, Restaurant> restaurants) {
+        try (FileOutputStream fos = new FileOutputStream("data/restaurants.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(restaurants);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static HashMap<String, Order> loadOrders() {
+        HashMap<String, Order> orders = new HashMap<>();
+        try (FileInputStream fis = new FileInputStream("data/orders.ser");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            orders = castObjectToHashMap(ois.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public static void saveOrders(HashMap<String, Order> orders) {
+        try (FileOutputStream fos = new FileOutputStream("data/orders.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(orders);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static HashMap<String, DeliveryPerson> loadDeliveryPeople() {
+        HashMap<String, DeliveryPerson> deliveryPeople = new HashMap<>();
+        try (FileInputStream fis = new FileInputStream("data/delivery_people.ser");
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            deliveryPeople = castObjectToHashMap(ois.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return deliveryPeople;
+    }
+
+    public static void saveDeliveryPeople(HashMap<String, DeliveryPerson> deliveryPeople) {
+        try (FileOutputStream fos = new FileOutputStream("data/delivery_people.ser");
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(deliveryPeople);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> HashMap<String, T> castObjectToHashMap(Object obj) {
+        return (HashMap<String, T>) obj;
+    }
+}
+
+

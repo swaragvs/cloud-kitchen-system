@@ -1,0 +1,42 @@
+C:\Users\Lenovo\Desktop\food-delivery-system>javac -Xlint:unchecked main/Main.java model/*.java service/*.java util/*.java
+
+C:\Users\Lenovo\Desktop\food-delivery-system>java main.Main
+java.io.FileNotFoundException: data\users.ser (The system cannot find the path specified)
+        at java.base/java.io.FileInputStream.open0(Native Method)
+        at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+        at util.FileUtil.loadUsers(FileUtil.java:13)
+        at service.UserService.<init>(UserService.java:12)
+        at main.Main.<clinit>(Main.java:15)
+java.io.FileNotFoundException: data\restaurants.ser (The system cannot find the path specified)
+        at java.base/java.io.FileInputStream.open0(Native Method)
+        at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+        at util.FileUtil.loadRestaurants(FileUtil.java:33)
+        at service.RestaurantService.<init>(RestaurantService.java:13)
+        at main.Main.<clinit>(Main.java:16)
+java.io.FileNotFoundException: data\orders.ser (The system cannot find the path specified)
+        at java.base/java.io.FileInputStream.open0(Native Method)
+        at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+        at util.FileUtil.loadOrders(FileUtil.java:53)
+        at service.OrderService.<init>(OrderService.java:13)
+        at main.Main.<clinit>(Main.java:17)
+java.io.FileNotFoundException: data\delivery_people.ser (The system cannot find the path specified)
+        at java.base/java.io.FileInputStream.open0(Native Method)
+        at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+        at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+        at util.FileUtil.loadDeliveryPeople(FileUtil.java:73)
+        at service.DeliveryService.<init>(DeliveryService.java:13)
+        at main.Main.<clinit>(Main.java:18)
+1. Register User
+2. Login User
+3. Add Restaurant
+4. Add Menu Item
+5. Place Order
+6. Exit
+Enter your choice:

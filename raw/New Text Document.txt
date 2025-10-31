@@ -1,0 +1,1152 @@
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\gui\MainFrame.java
+package gui;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class MainFrame extends JFrame {
+    public MainFrame() {
+        setTitle("Food Delivery System");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        setLayout(new BorderLayout());
+
+        // Create the navigation panel
+        JPanel navPanel = new JPanel();
+        navPanel.setLayout(new GridLayout(1, 4));
+
+        JButton userRegButton = new JButton("User Registration");
+        JButton userLoginButton = new JButton("User Login");
+        JButton restaurantRegButton = new JButton("Restaurant Registration");
+        JButton restaurantMenuButton = new JButton("Manage Restaurant");
+
+        navPanel.add(userRegButton);
+        navPanel.add(userLoginButton);
+        navPanel.add(restaurantRegButton);
+        navPanel.add(restaurantMenuButton);
+
+        add(navPanel, BorderLayout.NORTH);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel contentPanel = new JPanel(cardLayout);
+
+        UserRegistrationPanel userRegPanel = new UserRegistrationPanel();
+        UserLoginPanel userLoginPanel = new UserLoginPanel();
+        RestaurantRegistrationPanel restaurantRegPanel = new RestaurantRegistrationPanel();
+        RestaurantMenuPanel restaurantMenuPanel = new RestaurantMenuPanel();
+
+        contentPanel.add(userRegPanel, "User Registration");
+        contentPanel.add(userLoginPanel, "User Login");
+        contentPanel.add(restaurantRegPanel, "Restaurant Registration");
+        contentPanel.add(restaurantMenuPanel, "Manage Restaurant");
+
+        add(contentPanel, BorderLayout.CENTER);
+
+        userRegButton.addActionListener(e -> cardLayout.show(contentPanel, "User Registration"));
+        userLoginButton.addActionListener(e -> cardLayout.show(contentPanel, "User Login"));
+        restaurantRegButton.addActionListener(e -> cardLayout.show(contentPanel, "Restaurant Registration"));
+        restaurantMenuButton.addActionListener(e -> cardLayout.show(contentPanel, "Manage Restaurant"));
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MainFrame::new);
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\gui\OrderPanel.java
+package gui;
+
+import model.MenuItem;
+import model.Order;
+import model.Restaurant;
+import service.OrderService;
+import service.RestaurantService;
+import service.UserService;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.UUID;
+
+public class OrderPanel extends JPanel {
+    private final UserService userService = new UserService();
+    private final RestaurantService restaurantService = new RestaurantService();
+    private final OrderService orderService = new OrderService();
+
+    public OrderPanel(String userId) {
+        setLayout(new BorderLayout());
+
+        JPanel orderPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        JLabel titleLabel = new JLabel("Place Order");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        orderPanel.add(titleLabel, constraints);
+
+        constraints.gridwidth = 1;
+
+        JLabel restaurantIdLabel = new JLabel("Restaurant ID:");
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        orderPanel.add(restaurantIdLabel, constraints);
+
+        JTextField restaurantIdField = new JTextField(20);
+        constraints.gridx = 1;
+        orderPanel.add(restaurantIdField, constraints);
+
+        JLabel itemIdLabel = new JLabel("Item ID:");
+        constraints.gridy = 2;
+        constraints.gridx = 0;
+        orderPanel.add(itemIdLabel, constraints);
+
+        JTextField itemIdField = new JTextField(20);
+        constraints.gridx = 1;
+        orderPanel.add(itemIdField, constraints);
+
+        JButton orderButton = new JButton("Place Order");
+        constraints.gridy = 3;
+        constraints.gridx = 0;
+        constraints.gridwidth = 2;
+        orderPanel.add(orderButton, constraints);
+
+        add(orderPanel, BorderLayout.NORTH);
+
+        JTextArea orderTextArea = new JTextArea(10, 40);
+        JScrollPane scrollPane = new JScrollPane(orderTextArea);
+        add(scrollPane, BorderLayout.CENTER);
+
+        orderButton.addActionListener(e -> {
+            String restaurantId = restaurantIdField.getText();
+            String itemId = itemIdField.getText();
+
+            Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+            if (restaurant != null && restaurant.getMenu().containsKey(itemId)) {
+                MenuItem menuItem = restaurant.getMenu().get(itemId);
+                Order order = new Order(UUID.randomUUID().toString(), userId, restaurantId, itemId, menuItem.getPrice());
+                orderService.createOrder(order);
+
+                JOptionPane.showMessageDialog(this, "Order placed successfully!");
+
+                StringBuilder orderText = new StringBuilder();
+                for (Order userOrder : orderService.getOrdersByUserId(userId)) {
+                    orderText.append(userOrder.getOrderId()).append(" - ")
+                            .append(userOrder.getRestaurantId()).append(": ")
+                            .append(userOrder.getItemId()).append(" - $")
+                            .append(userOrder.getPrice()).append("\n");
+                }
+                orderTextArea.setText(orderText.toString());
+
+                restaurantIdField.setText("");
+                itemIdField.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid restaurant ID or item ID.");
+            }
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\gui\RestaurantMenuPanel.java
+package gui;
+
+import model.MenuItem;
+import model.Restaurant;
+import service.RestaurantService;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class RestaurantMenuPanel extends JPanel {
+    private final RestaurantService restaurantService = new RestaurantService();
+
+    public RestaurantMenuPanel() {
+        setLayout(new BorderLayout());
+
+        JPanel addMenuItemPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        JLabel titleLabel = new JLabel("Add Menu Item");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        addMenuItemPanel.add(titleLabel, constraints);
+
+        constraints.gridwidth = 1;
+
+        JLabel restaurantIdLabel = new JLabel("Restaurant ID:");
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        addMenuItemPanel.add(restaurantIdLabel, constraints);
+
+        JTextField restaurantIdField = new JTextField(20);
+        constraints.gridx = 1;
+        addMenuItemPanel.add(restaurantIdField, constraints);
+
+        JLabel itemIdLabel = new JLabel("Item ID:");
+        constraints.gridy = 2;
+        constraints.gridx = 0;
+        addMenuItemPanel.add(itemIdLabel, constraints);
+
+        JTextField itemIdField = new JTextField(20);
+        constraints.gridx = 1;
+        addMenuItemPanel.add(itemIdField, constraints);
+
+        JLabel itemNameLabel = new JLabel("Item Name:");
+        constraints.gridy = 3;
+        constraints.gridx = 0;
+        addMenuItemPanel.add(itemNameLabel, constraints);
+
+        JTextField itemNameField = new JTextField(20);
+        constraints.gridx = 1;
+        addMenuItemPanel.add(itemNameField, constraints);
+
+        JLabel itemPriceLabel = new JLabel("Item Price:");
+        constraints.gridy = 4;
+        constraints.gridx = 0;
+        addMenuItemPanel.add(itemPriceLabel, constraints);
+
+        JTextField itemPriceField = new JTextField(20);
+        constraints.gridx = 1;
+        addMenuItemPanel.add(itemPriceField, constraints);
+
+        JButton addButton = new JButton("Add Item");
+        constraints.gridy = 5;
+        constraints.gridx = 0;
+        constraints.gridwidth = 2;
+        addMenuItemPanel.add(addButton, constraints);
+
+        add(addMenuItemPanel, BorderLayout.NORTH);
+
+        JTextArea menuTextArea = new JTextArea(10, 40);
+        JScrollPane scrollPane = new JScrollPane(menuTextArea);
+        add(scrollPane, BorderLayout.CENTER);
+
+        addButton.addActionListener(e -> {
+            String restaurantId = restaurantIdField.getText();
+            String itemId = itemIdField.getText();
+            String itemName = itemNameField.getText();
+            double itemPrice = Double.parseDouble(itemPriceField.getText());
+
+            restaurantService.addMenuItemToRestaurant(restaurantId, new MenuItem(itemId, itemName, itemPrice));
+
+            JOptionPane.showMessageDialog(this, "Menu item added successfully!");
+
+            Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
+            if (restaurant != null) {
+                StringBuilder menuText = new StringBuilder();
+                for (MenuItem menuItem : restaurant.getMenu().values()) {
+                    menuText.append(menuItem.getItemId()).append(" - ")
+                            .append(menuItem.getName()).append(": $")
+                            .append(menuItem.getPrice()).append("\n");
+                }
+                menuTextArea.setText(menuText.toString());
+            }
+
+            restaurantIdField.setText("");
+            itemIdField.setText("");
+            itemNameField.setText("");
+            itemPriceField.setText("");
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\gui\RestaurantRegistrationPanel.java
+package gui;
+
+import service.RestaurantService;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class RestaurantRegistrationPanel extends JPanel {
+    private final RestaurantService restaurantService = new RestaurantService();
+
+    public RestaurantRegistrationPanel() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        JLabel titleLabel = new JLabel("Restaurant Registration");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        add(titleLabel, constraints);
+
+        constraints.gridwidth = 1;
+
+        JLabel restaurantIdLabel = new JLabel("Restaurant ID:");
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        add(restaurantIdLabel, constraints);
+
+        JTextField restaurantIdField = new JTextField(20);
+        constraints.gridx = 1;
+        add(restaurantIdField, constraints);
+
+        JLabel nameLabel = new JLabel("Name:");
+        constraints.gridy = 2;
+        constraints.gridx = 0;
+        add(nameLabel, constraints);
+
+        JTextField nameField = new JTextField(20);
+        constraints.gridx = 1;
+        add(nameField, constraints);
+
+        JLabel addressLabel = new JLabel("Address:");
+        constraints.gridy = 3;
+        constraints.gridx = 0;
+        add(addressLabel, constraints);
+
+        JTextField addressField = new JTextField(20);
+        constraints.gridx = 1;
+        add(addressField, constraints);
+
+        JButton registerButton = new JButton("Register");
+        constraints.gridy = 4;
+        constraints.gridx = 0;
+        constraints.gridwidth = 2;
+        add(registerButton, constraints);
+
+        registerButton.addActionListener(e -> {
+            String restaurantId = restaurantIdField.getText();
+            String name = nameField.getText();
+            String address = addressField.getText();
+
+            restaurantService.addRestaurant(restaurantId, name, address);
+
+            JOptionPane.showMessageDialog(this, "Restaurant registered successfully!");
+
+            restaurantIdField.setText("");
+            nameField.setText("");
+            addressField.setText("");
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\gui\UserLoginPanel.java
+package gui;
+
+import service.UserService;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class UserLoginPanel extends JPanel {
+    private final UserService userService = new UserService();
+
+    public UserLoginPanel() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        JLabel titleLabel = new JLabel("User Login");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        add(titleLabel, constraints);
+
+        constraints.gridwidth = 1;
+
+        JLabel userIdLabel = new JLabel("User ID:");
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        add(userIdLabel, constraints);
+
+        JTextField userIdField = new JTextField(20);
+        constraints.gridx = 1;
+        add(userIdField, constraints);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        constraints.gridy = 2;
+        constraints.gridx = 0;
+        add(passwordLabel, constraints);
+
+        JPasswordField passwordField = new JPasswordField(20);
+        constraints.gridx = 1;
+        add(passwordField, constraints);
+
+        JButton loginButton = new JButton("Login");
+        constraints.gridy = 3;
+        constraints.gridx = 0;
+        constraints.gridwidth = 2;
+        add(loginButton, constraints);
+
+        loginButton.addActionListener(e -> {
+            String userId = userIdField.getText();
+            String password = new String(passwordField.getPassword());
+
+            if (userService.authenticateUser(userId, password)) {
+                JOptionPane.showMessageDialog(this, "Login successful!");
+                // Navigate to the user's main panel (order panel, etc.)
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid credentials, please try again.");
+            }
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\gui\UserRegistrationPanel.java
+package gui;
+
+import service.UserService;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class UserRegistrationPanel extends JPanel {
+    private final UserService userService = new UserService();
+
+    public UserRegistrationPanel() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        JLabel titleLabel = new JLabel("User Registration");
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        add(titleLabel, constraints);
+
+        constraints.gridwidth = 1;
+
+        JLabel userIdLabel = new JLabel("User ID:");
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        add(userIdLabel, constraints);
+
+        JTextField userIdField = new JTextField(20);
+        constraints.gridx = 1;
+        add(userIdField, constraints);
+
+        JLabel nameLabel = new JLabel("Name:");
+        constraints.gridy = 2;
+        constraints.gridx = 0;
+        add(nameLabel, constraints);
+
+        JTextField nameField = new JTextField(20);
+        constraints.gridx = 1;
+        add(nameField, constraints);
+
+        JLabel emailLabel = new JLabel("Email:");
+        constraints.gridy = 3;
+        constraints.gridx = 0;
+        add(emailLabel, constraints);
+
+        JTextField emailField = new JTextField(20);
+        constraints.gridx = 1;
+        add(emailField, constraints);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        constraints.gridy = 4;
+        constraints.gridx = 0;
+        add(passwordLabel, constraints);
+
+        JPasswordField passwordField = new JPasswordField(20);
+        constraints.gridx = 1;
+        add(passwordField, constraints);
+
+        JLabel phoneLabel = new JLabel("Phone:");
+        constraints.gridy = 5;
+        constraints.gridx = 0;
+        add(phoneLabel, constraints);
+
+        JTextField phoneField = new JTextField(20);
+        constraints.gridx = 1;
+        add(phoneField, constraints);
+
+        JButton registerButton = new JButton("Register");
+        constraints.gridy = 6;
+        constraints.gridx = 0;
+        constraints.gridwidth = 2;
+        add(registerButton, constraints);
+
+        registerButton.addActionListener(e -> {
+            String userId = userIdField.getText();
+            String name = nameField.getText();
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+            String phone = phoneField.getText();
+
+            userService.registerUser(userId, name, email, password, phone);
+
+            JOptionPane.showMessageDialog(this, "User registered successfully!");
+
+            userIdField.setText("");
+            nameField.setText("");
+            emailField.setText("");
+            passwordField.setText("");
+            phoneField.setText("");
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\main\Main.java
+package main;
+
+import service.UserService;
+import gui.MainFrame;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Main {
+    private static final UserService userService = new UserService();
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
+        });
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\model\DataInitialization.java
+package main;
+
+import util.FileUtil;
+import model.User;
+import model.Restaurant;
+import model.Order;
+import model.DeliveryPerson;
+import model.MenuItem;
+
+import java.util.HashMap;
+
+public class DataInitialization {
+    public static void main(String[] args) {
+        createFiles();
+    }
+
+    private static void createFiles() {
+        createUsersFile();
+        createRestaurantsFile();
+        createOrdersFile();
+        createDeliveryPeopleFile();
+        // Uncomment the line below if you want to create the menu_items.ser file
+        // createMenuItemsFile();
+    }
+
+    private static void createUsersFile() {
+        HashMap<String, User> users = new HashMap<>();
+        FileUtil.saveUsers(users);
+        System.out.println("Created users.ser file.");
+    }
+
+    private static void createRestaurantsFile() {
+        HashMap<String, Restaurant> restaurants = new HashMap<>();
+        FileUtil.saveRestaurants(restaurants);
+        System.out.println("Created restaurants.ser file.");
+    }
+
+    private static void createOrdersFile() {
+        HashMap<String, Order> orders = new HashMap<>();
+        FileUtil.saveOrders(orders);
+        System.out.println("Created orders.ser file.");
+    }
+
+    private static void createDeliveryPeopleFile() {
+        HashMap<String, DeliveryPerson> deliveryPeople = new HashMap<>();
+        FileUtil.saveDeliveryPeople(deliveryPeople);
+        System.out.println("Created delivery_people.ser file.");
+    }
+
+    private static void createMenuItemsFile() {
+        HashMap<String, MenuItem> menuItems = new HashMap<>();
+        // Populate menuItems HashMap if needed
+        FileUtil.saveMenuItems(menuItems);
+        System.out.println("Created menu_items.ser file.");
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\model\DeliveryPerson.java
+package model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DeliveryPerson implements Serializable {
+    private String deliveryPersonId;
+    private String name;
+    private String currentLocation;
+    private List<Order> assignedOrders;
+
+    public DeliveryPerson(String deliveryPersonId, String name, String currentLocation) {
+        this.deliveryPersonId = deliveryPersonId;
+        this.name = name;
+        this.currentLocation = currentLocation;
+        this.assignedOrders = new ArrayList<>();
+    }
+
+    // Getters and setters
+    public String getDeliveryPersonId() {
+        return deliveryPersonId;
+    }
+
+    public void setDeliveryPersonId(String deliveryPersonId) {
+        this.deliveryPersonId = deliveryPersonId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;
+    }
+
+    public List<Order> getAssignedOrders() {
+        return assignedOrders;
+    }
+
+    public void setAssignedOrders(List<Order> assignedOrders) {
+        this.assignedOrders = assignedOrders;
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\model\MenuItem.java
+package model;
+
+import java.io.Serializable;
+
+public class MenuItem implements Serializable {
+    private String itemId;
+    private String name;
+    private String description;
+    private double price;
+
+    public MenuItem(String itemId, String name, String description, double price) {
+        this.itemId = itemId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
+    // Getters and setters
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\model\Order.java
+package model;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class Order implements Serializable {
+    private String orderId;
+    private String userId;
+    private String restaurantId;
+    private HashMap<MenuItem, Integer> items;
+    private String status;
+    private String deliveryPersonId;
+
+    public Order(String orderId, String userId, String restaurantId) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.restaurantId = restaurantId;
+        this.items = new HashMap<>();
+        this.status = "Pending";
+    }
+
+    // Getters and setters
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public HashMap<MenuItem, Integer> getItems() {
+        return items;
+    }
+
+    public void setItems(HashMap<MenuItem, Integer> items) {
+        this.items = items;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDeliveryPersonId() {
+        return deliveryPersonId;
+    }
+
+    public void setDeliveryPersonId(String deliveryPersonId) {
+        this.deliveryPersonId = deliveryPersonId;
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\model\Restaurant.java
+package model;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class Restaurant implements Serializable {
+    private String restaurantId;
+    private String name;
+    private String address;
+    private HashMap<String, MenuItem> menu;
+
+    public Restaurant(String restaurantId, String name, String address) {
+        this.restaurantId = restaurantId;
+        this.name = name;
+        this.address = address;
+        this.menu = new HashMap<>();
+    }
+
+    // Getters and setters
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public HashMap<String, MenuItem> getMenu() {
+        return menu;
+    }
+
+    public void setMenu(HashMap<String, MenuItem> menu) {
+        this.menu = menu;
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\model\User.java
+package model;
+
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private String userId;
+    private String name;
+    private String email;
+    private String password;
+    private String address;
+
+    public User(String userId, String name, String email, String password, String address) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+    }
+
+    // Getters and setters
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\service\DeliveryService.java
+package service;
+
+import model.DeliveryPerson;
+import model.Order;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class DeliveryService {
+    private HashMap<String, DeliveryPerson> deliveryPeople;
+
+    public DeliveryService() {
+        deliveryPeople = FileUtil.loadDeliveryPeople();
+    }
+
+    public void assignOrder(String deliveryPersonId, Order order) {
+        DeliveryPerson deliveryPerson = deliveryPeople.get(deliveryPersonId);
+        if (deliveryPerson != null) {
+            deliveryPerson.getAssignedOrders().add(order);
+            FileUtil.saveDeliveryPeople(deliveryPeople);
+        }
+    }
+
+    public void updateDeliveryPersonLocation(String deliveryPersonId, String newLocation) {
+        DeliveryPerson deliveryPerson = deliveryPeople.get(deliveryPersonId);
+        if (deliveryPerson != null) {
+            deliveryPerson.setCurrentLocation(newLocation);
+            FileUtil.saveDeliveryPeople(deliveryPeople);
+        }
+    }
+
+    // Other methods to manage delivery personnel
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\service\OrderService.java
+package service;
+
+import model.Order;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class OrderService {
+    private HashMap<String, Order> orders;
+
+    public OrderService() {
+        orders = FileUtil.loadOrders();
+    }
+
+    public void placeOrder(Order order) {
+        orders.put(order.getOrderId(), order);
+        FileUtil.saveOrders(orders);
+    }
+
+    public void cancelOrder(String orderId) {
+        orders.remove(orderId);
+        FileUtil.saveOrders(orders);
+    }
+
+    // Other methods related to order management
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\service\RestaurantService.java
+package service;
+
+import model.MenuItem; // Import MenuItem if it's defined in the model package
+
+import model.Restaurant;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class RestaurantService {
+    private HashMap<String, Restaurant> restaurants;
+
+    public RestaurantService() {
+        restaurants = FileUtil.loadRestaurants();
+    }
+
+    public void addRestaurant(Restaurant restaurant) {
+        restaurants.put(restaurant.getRestaurantId(), restaurant);
+        FileUtil.saveRestaurants(restaurants);
+    }
+
+    public void updateRestaurantMenu(String restaurantId, HashMap<String, MenuItem> menu) {
+        Restaurant restaurant = restaurants.get(restaurantId);
+        if (restaurant != null) {
+            restaurant.setMenu(menu);
+            FileUtil.saveRestaurants(restaurants);
+        }
+    }
+
+    // Other methods related to restaurant management
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\service\UserService.java
+package service;
+
+import model.User;
+import model.Restaurant;
+import model.Order;
+import model.DeliveryPerson;
+import model.MenuItem;
+import util.FileUtil;
+
+import java.util.HashMap;
+
+public class UserService {
+    private HashMap<String, User> users;
+
+    public UserService() {
+        users = FileUtil.loadUsers();
+    }
+
+    public boolean authenticate(String email, String password) {
+        User user = users.get(email);
+        return user != null && user.getPassword().equals(password);
+    }
+
+    public void registerUser(User user) {
+        users.put(user.getEmail(), user);
+        FileUtil.saveUsers(users);
+    }
+
+    public User getUserByEmail(String email) {
+        return users.get(email);
+    }
+
+    // Other methods related to user management
+
+    public HashMap<String, User> getUsers() {
+        return users;
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\util\CreateUsersSerFile.java
+package util;
+
+import model.User;
+import java.util.HashMap;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+public class CreateUsersSerFile {
+    public static void main(String[] args) {
+        HashMap<String, User> users = new HashMap<>(); // Create an empty HashMap
+
+        // Path to where you want to save the users.ser file
+        String filePath = "users.ser";
+
+        try (FileOutputStream fileOut = new FileOutputStream(filePath);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+            
+            // Write the HashMap to the file
+            objectOut.writeObject(users);
+            System.out.println("Empty users.ser file created successfully.");
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+// Content from C:\Users\Lenovo\Desktop\ToolBox\Java_VCS\src\food-delivery-system\src\util\FileUtil.java
+package util;
+
+import model.User;
+import model.Restaurant;
+import model.Order;
+import model.DeliveryPerson;
+import model.MenuItem;
+
+import java.io.*;
+import java.util.HashMap;
+
+public class FileUtil {
+    private static final String USERS_FILE = "users.ser";
+    private static final String RESTAURANTS_FILE = "restaurants.ser";
+    private static final String ORDERS_FILE = "orders.ser";
+    private static final String DELIVERY_PEOPLE_FILE = "delivery_people.ser";
+    private static final String MENU_ITEMS_FILE = "menu_items.ser";
+
+    public static void saveUsers(HashMap<String, User> users) {
+        saveObject(users, USERS_FILE);
+    }
+
+    public static HashMap<String, User> loadUsers() {
+        return (HashMap<String, User>) loadObject(USERS_FILE);
+    }
+
+    public static void saveRestaurants(HashMap<String, Restaurant> restaurants) {
+        saveObject(restaurants, RESTAURANTS_FILE);
+    }
+
+    public static HashMap<String, Restaurant> loadRestaurants() {
+        return (HashMap<String, Restaurant>) loadObject(RESTAURANTS_FILE);
+    }
+
+    public static void saveOrders(HashMap<String, Order> orders) {
+        saveObject(orders, ORDERS_FILE);
+    }
+
+    public static HashMap<String, Order> loadOrders() {
+        return (HashMap<String, Order>) loadObject(ORDERS_FILE);
+    }
+
+    public static void saveDeliveryPeople(HashMap<String, DeliveryPerson> deliveryPeople) {
+        saveObject(deliveryPeople, DELIVERY_PEOPLE_FILE);
+    }
+
+    public static HashMap<String, DeliveryPerson> loadDeliveryPeople() {
+        return (HashMap<String, DeliveryPerson>) loadObject(DELIVERY_PEOPLE_FILE);
+    }
+
+    public static void saveMenuItems(HashMap<String, MenuItem> menuItems) {
+        saveObject(menuItems, MENU_ITEMS_FILE);
+    }
+
+    public static HashMap<String, MenuItem> loadMenuItems() {
+        return (HashMap<String, MenuItem>) loadObject(MENU_ITEMS_FILE);
+    }
+
+    private static void saveObject(Object obj, String fileName) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            oos.writeObject(obj);
+            System.out.println(fileName + " saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Object loadObject(String fileName) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            Object obj = ois.readObject();
+            System.out.println(fileName + " loaded successfully.");
+            return obj;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
+
+
+PS C:\Users\Lenovo\Desktop\Project\food-delivery-system\src\main> javac Main.java
+Main.java:3: error: package service does not exist
+import service.UserService;
+              ^
+Main.java:4: error: package gui does not exist
+import gui.MainFrame;
+          ^
+Main.java:10: error: cannot find symbol
+    private static final UserService userService = new UserService();
+                         ^
+  symbol:   class UserService
+  location: class Main
+Main.java:10: error: cannot find symbol
+    private static final UserService userService = new UserService();
+                                                       ^
+  symbol:   class UserService
+  location: class Main
+Main.java:14: error: cannot find symbol
+            MainFrame mainFrame = new MainFrame();
+            ^
+  symbol:   class MainFrame
+  location: class Main
+Main.java:14: error: cannot find symbol
+            MainFrame mainFrame = new MainFrame();
+                                      ^
+  symbol:   class MainFrame
+  location: class Main
+6 errors
+PS C:\Users\Lenovo\Desktop\Project\food-delivery-system\src\main>

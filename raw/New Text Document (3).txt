@@ -1,0 +1,6 @@
+@echo off
+cd C:\Users\Lenovo\Desktop\Project\food-delivery-system\src
+for /r %%i in (*.java) do (
+    javac "%%i"
+)
+pause

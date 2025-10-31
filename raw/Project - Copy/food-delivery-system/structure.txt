@@ -1,0 +1,16 @@
+food-delivery-system/
+├── main/
+│   └── Main.java
+├── model/
+│   ├── DeliveryPerson.java
+│   ├── MenuItem.java
+│   ├── Order.java
+│   ├── Restaurant.java
+│   └── User.java
+├── service/
+│   ├── DeliveryService.java
+│   ├── OrderService.java
+│   ├── RestaurantService.java
+│   └── UserService.java
+└── util/
+    └── FileUtil.java
